@@ -1,0 +1,11 @@
+- Color picker
+- Stackoverflow lookup
+- Embedded devdocs
+- JSON formatting/minification
+- Get CDN url from repo/npm
+- POST request testing
+- Get one file for google fonts
+- Get styles of element
+- Curl to fetch
+- Minifier
+- Regex searcher

@@ -1,0 +1,22 @@
+[
+    {
+        "name": "Code editor",
+        "id": "code-editor",
+        "page": "index.html",
+        "tags": ["editor", "code"],
+        "description": "An epic code editor which lets you run, copy, and beautify code!",
+        "scripts": ["main.js"],
+        "dependencies": ["prettier_parser_babel.js", "prettier.js", "codeflask.js"],
+        "styles": ["main.css"]
+    },
+    {
+        "name": "Color picker",
+        "id": "color-picker",
+        "page": "index.html",
+        "tags": ["color", "picker"],
+        "description": "An easy to use color picker",
+        "dependencies": ["iro.js"],
+        "scripts": ["main.js"],
+        "styles": ["main.css"]
+    }
+]

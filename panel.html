@@ -1,0 +1,43 @@
+<link rel="stylesheet" href="main.css"/>
+
+<div class="loading" style="height: 100vh; width: 100vw; background: white; z-index: 1000; transition: opacity .5s ease;">
+    <h2 style="color: #059669; font-weight: 300; margin: 0; padding: 0; font-size: clamp(15px, 2.5vw, 25px); position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">Developed</h2>
+</div>
+<div id="app">
+    <div class="addon_container" v-if="addon">
+        <div class="header my-1 py-2 flex items-center">
+            <button @click="closeAddon()" style="align-self: flex-start;" class="ml-1 p-2 text-md flex items-center rounded transition-all hover:bg-green-600 hover:text-white ring-1 ring-green-500 text-green-600">
+              <svg class="mr-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path fill="currentColor" d="M19 11H7.14l3.63-4.36a1 1 0 1 0-1.54-1.28l-5 6a1.19 1.19 0 0 0-.09.15c0 .05 0 .08-.07.13A1 1 0 0 0 4 12a1 1 0 0 0 .07.36c0 .05 0 .08.07.13a1.19 1.19 0 0 0 .09.15l5 6A1 1 0 0 0 10 19a1 1 0 0 0 .64-.23a1 1 0 0 0 .13-1.41L7.14 13H19a1 1 0 0 0 0-2z"/></svg>
+              Back
+            </button>
+            <h2 class="text-green-600 text-lg font-bold w-full text-center">{{addon.name}}</h2>
+        </div>
+        <hr class="w-full block h-0.5 bg-green-500">
+        <div class="addon" v-html="addon.html"></div>
+    </div>
+    <div class="notactive p-4" v-if="!addon">
+        <h2 class="text-xl text-gray-600 font-bold">Addons</h2>
+        <hr class="mb-2 w-full block h-0.5 bg-gray-300">
+        <ul class="addons">
+            <li class="border-2 mb-2 border-green-500 p-4 rounded-md cursor-pointer transition-all" v-for="item in addons" @click="loadAddon(item.id)">
+                <h2 class="addon_name text-xl text-green-600">{{item.name}}</h2>
+                <span class="addon_description font-light text-gray-600">{{item.description}}</span>
+                <div class="addon_options block ring-2 p-2 py-3 mt-2 ring-green-100 rounded" @click.capture.stop v-if="Object.keys(item.options || {}).length">
+                    <h2 class="text-lg text-gray-500 mb-2">Options</h2>
+                    <div style="width: fit-content" class="flex rounded p-4 border addon_option" v-for="id in Object.keys(item.options)">
+                      <label class="flex items-center addon_option_label text-gray-600">
+                        {{item.options[id].label || id}}
+                      </label>
+                      <input class="text-green-700 outline-none ring-1 ring-green-300 p-2 ml-4 rounded shadow focus:ring-4 focus:ring-opacity-50 focus:ring-green-400 transition-all focus:outline-none" @change="storeSettings" :type="item.options[id].type" v-model="options[item.id][id]"/>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<link rel="stylesheet" href="libs/tailwind.css" />
+<link rel="stylesheet" href="libs/snackbar.css" />
+<script src="libs/vue.js"></script>
+<script src="libs/snackbar.js"></script>
+<script src="panel.js"></script>

@@ -1,0 +1,12 @@
+.ColorPicker_container {
+  display: flex;
+}
+.color {
+  display: block;
+  width: 100%;
+  font-family: monospace;
+  font-size: 1.1rem;
+}
+.input {
+    font-size: 1.1rem;
+}
