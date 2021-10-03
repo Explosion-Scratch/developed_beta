@@ -1,4 +1,32 @@
 initFetch();
+
+//Easier storage api
+const storage = {
+    get: (item) => {
+        return new Promise((resolve, reject) => {  
+            chrome.storage.local.get(Array.isArray(item) ? item : [item], (res) => {
+                if (chrome.runtime.lastError) {
+                  return reject(chrome.runtime.lastError);
+                }
+                var _return = Array.isArray(item) ? res : res[item];
+                resolve(_return);
+            });
+        })
+    },
+    set: (item, val) => {
+        return new Promise((resolve, reject) => {  
+            chrome.storage.local.set(item instanceof Object ? item : {[item]: val}, (res) => {
+                if (chrome.runtime.lastError) {
+                  return reject(chrome.runtime.lastError);
+                }
+                //res is nothing here
+                var _return = item
+                resolve(_return);
+            });
+        })
+    }
+}
+
 var app = Vue.createApp({
   data() {
     return {
@@ -11,6 +39,10 @@ var app = Vue.createApp({
     };
   },
   async mounted() {
+    var last = await storage.get("last_used_app")
+    if (last && last !== "home"){
+        await this.loadAddon(last);
+    }
     document.querySelector(".loading").style.opacity = 0;
     setTimeout(() => document.querySelector(".loading").remove(), 600);
     var {addon_settings: existing}  = await new Promise(res => chrome.storage.sync.get(["addon_settings"], res));
@@ -30,6 +62,7 @@ var app = Vue.createApp({
         chrome.storage.sync.set({"addon_settings": this.options});
     },
     closeAddon(){
+        storage.set("last_used_app", "home");
         location.reload();
     },
     async loadAddon(id) {
@@ -54,6 +87,7 @@ var app = Vue.createApp({
         if (_addon.scripts){
             _addon.scripts.forEach((s) => loadScript(`/addons/${_addon.id}/${s}`));
         }
+        storage.set("last_used_app", id);
       })
     },
   },
@@ -177,31 +211,7 @@ async function loadScript(src) {
                     })
                 }
             },
-            local: {
-                get: (item) => {
-                    return new Promise((resolve, reject) => {  
-                        chrome.storage.local.get(Array.isArray(item) ? item : [item], (res) => {
-                            if (chrome.runtime.lastError) {
-                              return reject(chrome.runtime.lastError);
-                            }
-                            var _return = Array.isArray(item) ? res : res[item];
-                            resolve(_return);
-                        });
-                    })
-                },
-                set: (item, val) => {
-                    return new Promise((resolve, reject) => {  
-                        chrome.storage.local.set(item instanceof Object ? item : {[item]: val}, (res) => {
-                            if (chrome.runtime.lastError) {
-                              return reject(chrome.runtime.lastError);
-                            }
-                            //res is nothing here
-                            var _return = item
-                            resolve(_return);
-                        });
-                    })
-                }
-            },
+            local: storage,
         },
         inspectedWindow: chrome.devtools.inspectedWindow, 
         devtools: chrome.devtools,

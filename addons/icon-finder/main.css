@@ -1,5 +1,14 @@
-svg {
+.icon svg {
     width: 2rem;
     height: 2rem;
-    display: block;
+    display: inline-block;
+}
+.icon {
+    display: inline-block;
+}
+
+@media (min-width: 640px){
+    .input_container * {
+        border-radius: none !important;
+    }
 }

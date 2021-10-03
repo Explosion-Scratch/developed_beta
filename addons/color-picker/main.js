@@ -1,11 +1,11 @@
-export default async function ({Snackbar, copy}) {
+export default async function ({Snackbar, copy, storage: {local: storage}}) {
   // Create a new color picker instance
 // https://iro.js.org/guide.html#getting-started
 var colorPicker = new iro.ColorPicker(".colorPicker", {
   // color picker options
   // Option guide: https://iro.js.org/guide.html#color-picker-options
   width: window.innerWidth / 3,
-  color: "rgb(255, 0, 0)",
+  color: await storage.get("color_picker_color_value") || "rgb(255, 0, 0)",
   borderWidth: 1,
   borderColor: "#fff",
   layout: [
@@ -40,6 +40,7 @@ var hexInput = document.getElementById("hexInput");
 // https://iro.js.org/guide.html#color-picker-events
 colorPicker.on(["color:init", "color:change"], function(color){
   var v = {};
+  storage.set("color_picker_color_value", color.hex8String)
   if (color.alpha !== 1){
     v = {
       hex: color.hex8String,

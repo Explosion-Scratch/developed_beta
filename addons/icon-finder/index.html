@@ -1,4 +1,7 @@
-<div class="flex flex-col justify-center items-center">
-    <input class="p-4 rounded shadow-md ring-2 ring-green-500 outline-none focus:outline-none" id="search_input"/><button id="search">Search</button>
-    <div id="icons"></div>
+<div class="flex flex-col justify-center items-center h-full">
+    <div class="rounded-md sm:overflow-hidden input_container flex-col sm:flex-row my-3 mx-4 sm:shadow-md sm:ring-2 ring-green-500 focus:ring-4 focus:ring-opacity-50 focus:shadow-lg flex w-5/6">
+      <input style="flex: 5;" class="ring-2 ring-green-500 sm:ring-transparent outline-none p-3 focus:outline-none rounded sm:rounded-none" id="search_input"/>
+      <button id="search" class="flex-1 p-3 sm:p-0 bg-green-500 mt-2 sm:mt-0 text-white hover:bg-transparent hover:text-green-500 transition-colors rounded-md sm:rounded-none ring-2 ring-green-500 sm:ring-transparent">Search</button>
+    </div>
+    <div id="icons" class="w-5/6 py-4 h-5/6 overflow-scroll"></div>
 </div>
