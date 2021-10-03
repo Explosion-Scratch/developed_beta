@@ -40,6 +40,7 @@ var hexInput = document.getElementById("hexInput");
 // https://iro.js.org/guide.html#color-picker-events
 colorPicker.on(["color:init", "color:change"], function(color){
   var v = {};
+  document.querySelector(".color_preview").style.backgroundColor = color.hex8String;
   storage.set("color_picker_color_value", color.hex8String)
   if (color.alpha !== 1){
     v = {

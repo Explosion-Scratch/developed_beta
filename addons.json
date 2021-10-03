@@ -10,12 +10,11 @@
         "styles": ["main.css"]
     },
     {
-        "name": "Color picker",
-        "id": "color-picker",
+        "name": "CDN url searcher",
+        "id": "cdn-urls",
         "page": "index.html",
-        "tags": ["color", "picker"],
-        "description": "An easy to use color picker",
-        "dependencies": ["iro.js"],
+        "tags": ["search", "url", "resources"],
+        "description": "Search CDN urls from CDNJS",
         "scripts": ["main.js"],
         "styles": ["main.css"]
     },
@@ -27,6 +26,16 @@
         "description": "Get a quick code snippet from stackoverflow.",
         "scripts": ["main.js"],
         "dependencies": ["highlight.js", "vue-highlight-directive.js"],
+        "styles": ["main.css"]
+    },
+    {
+        "name": "Color picker",
+        "id": "color-picker",
+        "page": "index.html",
+        "tags": ["color", "picker"],
+        "description": "An easy to use color picker",
+        "dependencies": ["iro.js"],
+        "scripts": ["main.js"],
         "styles": ["main.css"]
     },
     {

@@ -28,7 +28,7 @@ export default async function({copy, notif, storage: {local: storage}}){
             n = n.split(":");
             var text = await fetch(`https://api.iconify.design/${n[0]}.js?icons=${n[1]}&callback=r`).then(res => res.text());
             var json = JSON.parse(fix(text));
-            var svg = `<div class="icon cursor-pointer shadow-md m-1 p-2 rounded transition-all duration-300 hover:bg-green-600 hover:text-white text-green-600"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" preserveAspectRatio="xMidYMid meet" viewBox="0 0 ${json.icons[n[1]].width || json.width} ${json.height}">${json.icons[n[1]].body}</svg></div>`;
+            var svg = `<div class="icon cursor-pointer shadow-md m-1 p-2 rounded transition-all duration-300 hover:bg-green-600 hover:text-white text-green-600"><svg width="1em" height="1em" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" preserveAspectRatio="xMidYMid meet" viewBox="0 0 ${json.icons[n[1]].width || json.width} ${json.height}">${json.icons[n[1]].body}</svg></div>`;
             return svg;
         })
         icons = await Promise.all(icons);
