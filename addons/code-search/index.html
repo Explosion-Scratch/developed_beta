@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="/libs/hljs.css" />
+<div class="searchContainer flex justify-center items-center h-full overflow-scroll flex-col">
+    <div class="inputs sm:relative w-5/6 sm:w-4/6 lg:w-3/6">
+        <input v-model="query" @keyup.enter="search" placeholder="Type your coding question here and magic will happen!" type="text" class="w-full text-gray-600 p-4 rounded-lg overflow-hidden shadow-lg ring-2 ring-green-400 focus:ring-4 focus:ring-opacity-50 focus:outline-none transition-all">
+        <button class="w-full mt-3 sm:mt-0 sm:w-auto sm:absolute right-0 bg-green-400 text-white rounded-lg sm:rounded-l-none sm:rounded-r-lg p-3 sm:p-4 ring-2 sm:ring-0 ring-green-400 hover:bg-green-500 focus:ring-4 focus:ring-opacity-50 transition-all active:bg-white active:text-green-400" @click="search" :disabled="searching">{{searching ? "Searching..." : "Search"}}</button>
+    </div>
+    <div v-if="searching" class="mt-20 block w-full text-lg font-extralight flex justify-center">
+        <span class="italic text-gray-500"><i>Loading...</i></span>
+    </div>
+    <div class="selects mt-3 flex w-5/6 sm:w-4/6 lg:w-3/6" v-if="!searching">
+        <select v-if="questions.length" class="mr-1 w-3/6 p-3 bg-white ring-2 ring-green-400 rounded focus:ring-4 focus:ring-opacity-50 hover:shadow-md 
+ text-green-600 questionSelect" v-model="questionID">
+            <option class="hover:bg-green-500 hover:text-white" v-for="question in questions" :key="question.id" :value="question.id">{{question.title}}</option>
+        </select>
+        <select v-if="answers.length" class="ml-1 w-3/6 p-3 bg-white ring-2 ring-green-400 rounded focus:ring-4 focus:ring-opacity-50 hover:shadow-md 
+ text-green-600 answerSelect" v-model="answerID">
+            <option class="hover:bg-green-500 hover:text-white" v-for="answer in answers" :key="answer.answer_id" :value="answer.answer_id" :selected="answer.id === answerID">[{{answer.score}}] {{htmlDecode(trim(answer.code, 20))}}</option>
+        </select>
+    </div>
+    <div v-if="selected" class="w-5/6 sm:w-4/6 lg:w-3/6 ring-2 ring-green-400 p-4 bg-green-100 m-3 rounded-lg shadow-lg">
+        <h1 class="text-center text-gray-600 text-xl font-bold mb-2">Code snippet</h1>
+        <pre v-highlightjs class="overflow-scroll max-h-48 w-full"><code v-html="selected"></code></pre>
+        <div class="buttons flex w-full" >
+              <button id="copy" class="flex-1 p-3 bg-green-500 rounded-lg mt-2 text-white hover:bg-green-600 focus:ring-4 focus:ring-opacity-50 transition-all focus:ring-green-400" @click="copySelected">Copy</button>
+        </div>
+    </div>
+</div>

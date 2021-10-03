@@ -2,7 +2,7 @@
   "name": "Developed a beta extension",
   "version": "1.0",
   "devtools_page": "init.html",
-  "permissions": ["storage", "clipboardWrite", "*://api.iconify.design/*"],
+  "permissions": ["storage", "clipboardWrite", "*://api.iconify.design/*", "*://*.explosionscratc.repl.co/*"],
   "manifest_version": 2,
-  "content_security_policy": "default-src https://api.iconify.design 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline';"
+  "content_security_policy": "default-src https://api.iconify.design https://*.explosionscratc.repl.co 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline';"
 }

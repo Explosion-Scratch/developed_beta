@@ -75,9 +75,14 @@ var app = Vue.createApp({
         `/addons/${_addon.id}/${_addon.html || "index.html"}`
       ).then((res) => res.text());
       this.addon.html = html;
+      //Wait for vue to render
       requestAnimationFrame(async () => {
+        //Manually set the HTML of .addon because it's v-pre and v-html doesn't work
+        document.querySelector(".addon").innerHTML = this.addon.html;
         if (_addon.dependencies?.length){
-            await Promise.all(_addon.dependencies.map((s) => load(`/libs/${s}`)));
+            for (let s of _addon.dependencies){
+                await load(s.startsWith("/") ? s : `/libs/${s}`);
+            }
             console.log("Loaded dependencies")
         }
         if (_addon.styles?.length){
@@ -100,13 +105,17 @@ function load(src){
             //Fixes Range out of order err
         s.setAttribute("charset", "utf-8");
         (document.head || document.body || document.documentElement).appendChild(s);
-        s.onload = resolve;
+        s.onload = () => {
+            console.log("Loaded %o", src);
+            resolve();
+        };
         s.onerror = reject;
     });
 }
 async function loadStyle(style){
     var s = document.createElement("style");
-    s.innerHTML = await $f(style).then(res => res.text());
+    //If style doesn't exist catch error
+    s.innerHTML = await $f(style).then(res => res.text()).catch(() => {});
     (document.head || document.body || document.documentElement).appendChild(s);
     return;
 }
@@ -142,6 +151,8 @@ async function loadScript(src) {
     }
     exports.default({
         ...permissions,
+        Vue,
+        current: document.querySelector(".addon"),
         withPermissions: async (list, fn) => {
             //Can't request permissions from background pages =|
             return fn();
@@ -173,6 +184,21 @@ async function loadScript(src) {
         },
         browser: chrome, 
         Snackbar,
+        notif: (opts) => {
+            var defaultOpts = {
+                backgroundColor: "#047857",
+                actionTextColor: "#10B981",
+                textColor: "#ECFDF5",
+                pos: "bottom-right",
+            }
+            if (typeof opts === "string"){
+                opts = {
+                    text: opts,
+                    ...defaultOpts
+                }
+            }
+            Snackbar.show({...defaultOpts, ...opts})
+        },
         copy: (_text) => {
             //navigator.clipboard.writeText(_text);
             var t = document.createElement("textarea");
@@ -232,7 +258,7 @@ function initFetch() {
   const _fetch = window.fetch;
   window.$f = (e, i = {}) => (
     window.FETCH_CACHE || (window.FETCH_CACHE = {}),
-    new Promise((o) => {
+    new Promise((o, reject) => {
       var n = JSON.stringify({
         url: e,
         method: i.method,
@@ -248,7 +274,7 @@ function initFetch() {
         (window.FETCH_CACHE[n] = e.clone()),
           o(e),
           console.log("Fetched new version");
-      });
+      }).catch(reject);
     })
   );
 }

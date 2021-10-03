@@ -1,0 +1,13 @@
+pre * {
+    background: transparent !important;
+}
+* {
+    outline: none;
+}
+*:focus {
+    outline: none;
+}
+button:disabled {
+    cursor: not-allowed;
+    opacity: .2;
+}

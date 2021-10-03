@@ -20,6 +20,16 @@
         "styles": ["main.css"]
     },
     {
+        "name": "Code searcher",
+        "id": "code-search",
+        "page": "index.html",
+        "tags": ["stackoverflow", "code", "search"],
+        "description": "Get a quick code snippet from stackoverflow.",
+        "scripts": ["main.js"],
+        "dependencies": ["highlight.js", "vue-highlight-directive.js"],
+        "styles": ["main.css"]
+    },
+    {
         "name": "Icon finder",
         "id": "icon-finder",
         "page": "index.html",

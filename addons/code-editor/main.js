@@ -22,7 +22,7 @@ export default async function({runScript, withPermissions, storage: {local: stor
                 break;
             case "copy":
                 copy(flask.getCode());
-                notif({text: "Copied!"});
+                notif({text: "Copied!", pos: "bottom-right"});
                 break;
             case "beautify":
                 flask.updateCode(prettier.format(flask.getCode(), {
@@ -41,7 +41,7 @@ export default async function({runScript, withPermissions, storage: {local: stor
                 break;
         }
         } catch(e){
-            notif({text: e.message});
+            notif({text: e.message, pos: "bottom-right"});
         }
     })
 }

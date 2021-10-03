@@ -5,15 +5,15 @@
 </div>
 <div id="app">
     <div class="addon_container" v-if="addon">
-        <div class="header my-1 py-2 flex items-center">
-            <button @click="closeAddon()" style="align-self: flex-start;" class="ml-1 p-2 text-md flex items-center rounded transition-all hover:bg-green-600 hover:text-white ring-1 ring-green-500 text-green-600">
+        <div style="height: clamp(20px, 10vh, 50px);" class="header flex flex-row items-center justify-center">
+            <button @click="closeAddon()" style="align-self: center; justify-self: center;" class="ml-1 p-2 text-md inline-flex items-center rounded transition-all hover:bg-green-600 hover:text-white ring-1 ring-green-500 text-green-600">
               <svg class="mr-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path fill="currentColor" d="M19 11H7.14l3.63-4.36a1 1 0 1 0-1.54-1.28l-5 6a1.19 1.19 0 0 0-.09.15c0 .05 0 .08-.07.13A1 1 0 0 0 4 12a1 1 0 0 0 .07.36c0 .05 0 .08.07.13a1.19 1.19 0 0 0 .09.15l5 6A1 1 0 0 0 10 19a1 1 0 0 0 .64-.23a1 1 0 0 0 .13-1.41L7.14 13H19a1 1 0 0 0 0-2z"/></svg>
               Back
             </button>
             <h2 class="text-green-600 text-lg font-bold w-full text-center">{{addon.name}}</h2>
         </div>
         <hr class="w-full block h-0.5 bg-green-500">
-        <div class="addon" v-html="addon.html"></div>
+        <div class="addon" style="height: calc(100vh - clamp(20px, 10vh, 50px));" v-pre></div>
     </div>
     <div class="notactive p-4" v-if="!addon">
         <h2 class="text-xl text-gray-600 font-bold">Addons</h2>
