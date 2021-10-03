@@ -1,4 +1,4 @@
-export default async function ({Snackbar, copy, storage: {local: storage}}) {
+export default async function ({notif, copy, storage: {local: storage}}) {
   // Create a new color picker instance
 // https://iro.js.org/guide.html#getting-started
 var colorPicker = new iro.ColorPicker(".colorPicker", {
@@ -61,7 +61,7 @@ colorPicker.on(["color:init", "color:change"], function(color){
 document.addEventListener("click", (e) => {
     if (document.querySelector("#values").contains(e.target)){
         copy(e.target.closest(".color").querySelector(".color_value").innerText);
-        Snackbar.show({pos: "bottom-right", text: "Copied!"});
+        notif("Copied color!");
     }
 })
 hexInput.addEventListener('change', function() {

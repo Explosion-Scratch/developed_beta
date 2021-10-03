@@ -1,4 +1,4 @@
-export default async function({copy, Snackbar, storage: {local: storage}}){
+export default async function({copy, notif, storage: {local: storage}}){
     console.log(document.querySelector("#search"))
     var old = await storage.get("icon_input_value");
     if (old){
@@ -15,7 +15,7 @@ export default async function({copy, Snackbar, storage: {local: storage}}){
     document.addEventListener('click', ({target}) => {
         if (target.closest(".icon")){
             copy(target.closest(".icon").querySelector("svg").outerHTML);
-            Snackbar.show({pos: "bottom-right", text: "Copied"})
+           notif("Copied!");
         } else {
             console.log(target);
         }
