@@ -18,5 +18,14 @@
         "dependencies": ["iro.js"],
         "scripts": ["main.js"],
         "styles": ["main.css"]
+    },
+    {
+        "name": "Icon finder",
+        "id": "icon-finder",
+        "page": "index.html",
+        "tags": ["icon", "search", "iconify"],
+        "description": "Copy the SVG code for an icon easily!",
+        "scripts": ["main.js"],
+        "styles": ["main.css"]
     }
 ]

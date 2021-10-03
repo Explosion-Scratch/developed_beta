@@ -1,5 +1,4 @@
 initFetch();
-
 var app = Vue.createApp({
   data() {
     return {
@@ -141,15 +140,15 @@ async function loadScript(src) {
         browser: chrome, 
         Snackbar,
         copy: (_text) => {
-            chrome.devtools.inspectedWindow.eval(`(${(text) => {
-                navigator.clipboard.writeText(text);
-                var t = document.createElement("textarea");
-                document.body.appendChild(t);
-                t.value = text;
-                t.select();
-                document.execCommand("copy");
-                t.remove();
-            }})(${JSON.stringify(_text)})`);
+            //navigator.clipboard.writeText(_text);
+            var t = document.createElement("textarea");
+            document.body.appendChild(t);
+            t.value = _text;
+            t.select();
+            document.execCommand("copy");
+            t.remove();
+            t.blur();
+            return;
         },
         closeAddon: app.closeAddon,
         storage: {
