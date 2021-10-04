@@ -8,4 +8,5 @@
 - Get styles of element
 - Curl to fetch
 - Minifier
+- List meta tags
 - Regex searcher
