@@ -65,7 +65,7 @@ var app = Vue.createApp({
         storage.set("last_used_app", "home");
         location.reload();
     },
-    async loadAddon(id) {
+    async loadAddon(id, options = {}) {
       console.log("Loading %o", id);
       const addons = await $f("/addons.json").then((res) => res.json());
       const _addon = addons.find((i) => i.id === id);
@@ -90,7 +90,7 @@ var app = Vue.createApp({
             console.log("Loaded styles")
         }
         if (_addon.scripts){
-            _addon.scripts.forEach((s) => loadScript(`/addons/${_addon.id}/${s}`));
+            _addon.scripts.forEach((s) => loadScript(`/addons/${_addon.id}/${s}`, options));
         }
         storage.set("last_used_app", id);
       })
@@ -122,7 +122,7 @@ async function loadStyle(style){
     (document.head || document.body || document.documentElement).appendChild(s);
     return;
 }
-async function loadScript(src) {
+async function loadScript(src, options = {}) {
     console.log("Loading script %o", src);
     const exports = await import(src);
     console.log("Loaded, %o", exports);
@@ -155,6 +155,7 @@ async function loadScript(src) {
     exports.default({
         ...permissions,
         Vue,
+        loadAddon: app.loadAddon,
         path: src.split("/").slice(0, -1).join("/"),
         current: document.querySelector(".addon"),
         withPermissions: async (list, fn) => {
@@ -172,7 +173,7 @@ async function loadScript(src) {
             await Promise.all(list.map(permissions.removePermission));
             return result;
         },
-        options: app.options[app.addon.id] || {},
+        options: {...(app.options[app.addon.id] || {}), ...options},
         runScript: (s, ...args) => {
             if (typeof s === 'function'){
                 s = `(${s})(...${JSON.stringify(args)})`;

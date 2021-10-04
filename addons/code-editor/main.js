@@ -63,10 +63,10 @@ export default async function ({
     (() => {
       editor.addCommand(
         monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_B,
-        
+        beautify,
       );
       editor.getModel().onDidChangeContent(() => {
-        //do stuff on update
+        storage.set("code", editor.getValue());
       });
     })();
     async function getEditorContent() {
