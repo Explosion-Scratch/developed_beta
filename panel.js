@@ -99,6 +99,9 @@ var app = Vue.createApp({
 }).mount("#app");
 
 function load(src){
+    if (src.endsWith(".css")) {
+        return loadStyle(src);
+    }
     return new Promise((resolve, reject) => {
         var s = document.createElement("script");
         s.src = src;
@@ -152,6 +155,7 @@ async function loadScript(src) {
     exports.default({
         ...permissions,
         Vue,
+        path: src.split("/").slice(0, -1).join("/"),
         current: document.querySelector(".addon"),
         withPermissions: async (list, fn) => {
             //Can't request permissions from background pages =|
@@ -194,7 +198,6 @@ async function loadScript(src) {
             if (typeof opts === "string"){
                 opts = {
                     text: opts,
-                    ...defaultOpts
                 }
             }
             Snackbar.show({...defaultOpts, ...opts})
