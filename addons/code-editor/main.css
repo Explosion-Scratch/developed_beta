@@ -1,9 +1,0 @@
-.codeflask, textarea {
-    height: 80vh !important;
-    overflow: hidden;
-    width: 100vw !important;
-}
-
-.codeflask--has-line-numbers::before, .codeflask__lines {
-    z-index: 1000;
-}

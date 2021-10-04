@@ -1,47 +1,139 @@
-export default async function({runScript, withPermissions, storage: {local: storage}, copy, Snackbar: {show: notif}} = {}){
-    var stored = await storage.get("code");
-    
-    const flask = new CodeFlask('.editor', {
-      language: 'js',
-      lineNumbers: true,
+export default async function ({
+  runScript,
+  path,
+  withPermissions,
+  storage: { sync: storage },
+  copy,
+  notif,
+} = {}) {
+  var editor = {};
+  const options = {
+    cursorSmoothCaretAnimation: true,
+    dragAndDrop: true,
+    fontLigatures: true,
+    fontFamily: "Fira Code",
+    cursorBlinking: "smooth",
+    smoothScrolling: true,
+    renderWhitespace: "selection",
+    minimap: { enabled: false },
+    multiCursorModifier: "ctrlCmd",
+    copyWithSyntaxHighlighting: true,
+    formatOnType: true,
+    formatOnPaste: true,
+    scrollBeyondLastLine: false,
+    automaticLayout: true,
+  };
+  function init() {
+    return new Promise((res) => {
+      require.config({
+        paths: {
+          vs:
+            "https://cors.explosionscratc.repl.co/cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs",
+        },
+      });
+      window.MonacoEnvironment = { getWorkerUrl: () => proxy };
+      let proxy = URL.createObjectURL(
+        new Blob(
+          [
+            `
+    self.MonacoEnvironment = {
+      baseUrl: 'https://cors.explosionscratc.repl.co/cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+    };
+    importScripts('https://cors.explosionscratc.repl.co/cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+    `,
+          ],
+          { type: "text/javascript" }
+        )
+      );
+      require(["vs/editor/editor.main"], editorContext);
     });
-    
-    if (stored){
-        flask.updateCode(stored);
+  }
+  init();
+
+  async function editorContext() {
+    var data = await fetch(`${path}/theme.json`).then((res) => res.json());
+    console.log("Set theme", data);
+    monaco.editor.defineTheme("custom", data);
+    monaco.editor.setTheme("custom");
+    editor = create({
+      language: "javascript",
+      selector: ".editor",
+      value: "",
+    });
+    (() => {
+      editor.addCommand(
+        monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_B,
+        
+      );
+      editor.getModel().onDidChangeContent(() => {
+        //do stuff on update
+      });
+    })();
+    async function getEditorContent() {
+      editor.setValue((await storage.get("code")) || "");
+    }
+    getEditorContent();
+    function create({ value = "", language, selector }) {
+      let editor = monaco.editor.create(document.querySelector(selector), {
+        value: value,
+        language: language,
+        theme: "custom",
+        ...options,
+      });
+      return editor;
+    }
+  }
+  
+  function beautify() {
+      const value = editor.getValue();
+      console.log("Beautifying");
+      console.log("Cursor position is:");
+      var position = editor.getPosition();
+      console.log(position);
+      console.log("Cursor index is:");
+      var model = monaco.editor.createModel(value);
+      var index = model.getOffsetAt(position);
+      console.log(index);
+      var val = prettier.formatWithCursor(value, {
+        cursorOffset: index,
+        parser: "babel",
+        plugins: prettierPlugins,
+      });
+      editor.setValue(val.formatted);
+      var newModel = monaco.editor.createModel(val.formatted);
+      var newIndex = model.getPositionAt(val.cursorOffset);
+      console.log({ newModel, newIndex });
+      editor.setPosition(newIndex);
     }
     
-    flask.onUpdate((code) => {
-        storage.set("code", code);
-    })
-    
-    document.querySelector(".buttons").addEventListener("click", async (e) => {
-        try {
-        switch(e.target.id){
-            case "run":
-                runScript(flask.getCode());
-                break;
-            case "copy":
-                copy(flask.getCode());
-                notif({text: "Copied!", pos: "bottom-right"});
-                break;
-            case "beautify":
-                flask.updateCode(prettier.format(flask.getCode(), {
-                    parser: "babel",
-                    //Need this for babel plugin
-                    plugins: prettierPlugins,
-                }));
-                break;
-            case "minify":
-                flask.updateCode((await Terser.minify(
-                  flask.getCode(),
-                  { compress: { ecma: "2015", hoist_funs: true }, format: { quote_style: 2 } }
-                )).code)
-                break;
-            default:
-                break;
-        }
-        } catch(e){
-            notif({text: e.message, pos: "bottom-right"});
-        }
-    })
+  document.querySelector(".buttons").addEventListener("click", async (e) => {
+    try {
+      switch (e.target.id) {
+        case "run":
+          runScript(editor.getValue());
+          break;
+        case "copy":
+          copy(editor.getValue());
+          notif({ text: "Copied!", pos: "bottom-right" });
+          break;
+        case "beautify":
+          beautify();
+          break;
+        case "minify":
+          editor.setValue(
+            (
+              await Terser.minify(editor.getValue(), {
+                compress: { ecma: "2015", hoist_funs: true },
+                format: { quote_style: 2 },
+              })
+            ).code
+          );
+          break;
+        default:
+          break;
+      }
+    } catch (e) {
+      notif({ text: e.message, pos: "bottom-right" });
+    }
+  });
 }

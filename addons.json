@@ -6,7 +6,7 @@
         "tags": ["editor", "code"],
         "description": "An epic code editor which lets you run, copy, and beautify code!",
         "scripts": ["main.js"],
-        "dependencies": ["prettier_parser_babel.js", "prettier.js", "terser.js", "codeflask.js"],
+        "dependencies": ["prettier_parser_babel.js", "prettier.js", "terser.js", "monaco_loader.js", "fira_code.css"],
         "styles": ["main.css"]
     },
     {
