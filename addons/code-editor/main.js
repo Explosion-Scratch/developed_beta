@@ -5,9 +5,10 @@ export default async function ({
   storage: { sync: storage },
   copy,
   notif,
+  options,
 } = {}) {
   var editor = {};
-  const options = {
+  const editor_options = {
     cursorSmoothCaretAnimation: true,
     dragAndDrop: true,
     fontLigatures: true,
@@ -55,10 +56,13 @@ export default async function ({
     console.log("Set theme", data);
     monaco.editor.defineTheme("custom", data);
     monaco.editor.setTheme("custom");
+    if (options.code){
+        notif("You're edits to this code snippet are not autosaved, to prevent overwriting your previous snippet")
+    }
     editor = create({
       language: "javascript",
       selector: ".editor",
-      value: "",
+      value: options.code || await storage.get("code") || "",
     });
     (() => {
       editor.addCommand(
@@ -66,19 +70,17 @@ export default async function ({
         beautify,
       );
       editor.getModel().onDidChangeContent(() => {
-        storage.set("code", editor.getValue());
+        if (options.save !== false){
+            storage.set("code", editor.getValue());
+        }
       });
     })();
-    async function getEditorContent() {
-      editor.setValue((await storage.get("code")) || "");
-    }
-    getEditorContent();
     function create({ value = "", language, selector }) {
       let editor = monaco.editor.create(document.querySelector(selector), {
         value: value,
         language: language,
         theme: "custom",
-        ...options,
+        ...editor_options,
       });
       return editor;
     }

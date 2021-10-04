@@ -1,4 +1,4 @@
-export default async function({current, notif, copy}){
+export default async function({current, notif, copy, loadAddon}){
     const base = `https://quick-code-search-testing-thing.explosionscratc.repl.co`
     var app = Vue.createApp({
         data(){
@@ -29,6 +29,10 @@ export default async function({current, notif, copy}){
             },
             trim(text, length){
                 return text.length >= length - 3 ? `${text.slice(0, length - 3)}...` : text;
+            },
+            edit(){
+                notif("Loading...");
+                loadAddon("code-editor", {code: this.htmlDecode(this.selected), save: false})
             },
             copySelected(){
                 // ok

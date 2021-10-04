@@ -21,7 +21,7 @@
         <h1 class="text-center text-gray-600 text-xl font-bold mb-2">Code snippet</h1>
         <pre v-highlightjs class="overflow-scroll max-h-48 w-full"><code v-html="selected"></code></pre>
         <div class="buttons flex w-full" >
-              <button id="copy" class="flex-1 p-3 bg-green-500 rounded-lg mt-2 text-white hover:bg-green-600 focus:ring-4 focus:ring-opacity-50 transition-all focus:ring-green-400" @click="copySelected">Copy</button>
+              <button id="copy" class="flex-1 p-3 bg-green-500 rounded-lg mt-2 text-white hover:bg-green-600 focus:ring-4 focus:ring-opacity-50 transition-all focus:ring-green-400 mr-1" @click="copySelected">Copy</button><button class="ml-1 flex-1 p-3 ring-2 ring-green-500 rounded-lg mt-2 text-green-600 hover:bg-green-600 hover:text-white focus:ring-4 focus:ring-opacity-50 transition-all focus:ring-green-400" @click="edit">Edit</button>
         </div>
     </div>
 </div>
