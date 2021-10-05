@@ -2,7 +2,7 @@ export default async function ({
   runScript,
   path,
   withPermissions,
-  storage: { sync: storage },
+  storage: { sync: storage, local: {get: lstorage} },
   copy,
   notif,
   options,
@@ -11,6 +11,7 @@ export default async function ({
   const editor_options = {
     cursorSmoothCaretAnimation: true,
     dragAndDrop: true,
+    tabSize: 2,
     fontLigatures: true,
     fontFamily: "Fira Code",
     cursorBlinking: "smooth",
@@ -52,8 +53,30 @@ export default async function ({
   init();
 
   async function editorContext() {
-    var data = await fetch(`${path}/theme.json`).then((res) => res.json());
-    console.log("Set theme", data);
+    var data = await lstorage("monaco_theme") || await fetch(`${path}/theme.json`).then((res) => res.json());
+    const snippets = await lstorage("monaco_snippets") || await fetch(`${path}/snippets.json`).then(res => res.json());
+    console.log("Snippets", snippets);
+
+    monaco.languages.registerCompletionItemProvider('javascript', {
+        provideCompletionItems: function(model, position) {
+            // find out if we are completing a property in the 'dependencies' object.
+            var textUntilPosition = model.getValueInRange({startLineNumber: 1, startColumn: 1, endLineNumber: position.lineNumber, endColumn: position.column});
+            var match = textUntilPosition.match(/"dependencies"\s*:\s*\{\s*("[^"]*"\s*:\s*"[^"]*"\s*,\s*)*([^"]*)?$/);
+            if (!match) {
+                //return { suggestions: [] };
+            }
+            console.log('REGISTERING COMPLETIONS');
+            var word = model.getWordUntilPosition(position);
+            var range = {
+                startLineNumber: position.lineNumber,
+                endLineNumber: position.lineNumber,
+                startColumn: word.startColumn,
+                endColumn: word.endColumn
+            };
+            return {suggestions: Object.values(snippets).filter(i => i.body?.[0]).map(i => ({kind: monaco.languages.CompletionItemKind.Function, label: i.prefix, documentation: i.description, insertText: i.body[0], range, insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet}))}
+        }
+    });
+    
     monaco.editor.defineTheme("custom", data);
     monaco.editor.setTheme("custom");
     if (options.code){

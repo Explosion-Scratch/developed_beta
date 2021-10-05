@@ -3,6 +3,8 @@
 - Embedded devdocs
 - JSON formatting/minification
 - Get CDN url from repo/npm
+    - Done for CDNJS
+    - Add load into current page feature
 - POST request testing
 - Get one file for google fonts
 - Get styles of element
