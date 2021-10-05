@@ -62,10 +62,9 @@ export default async function ({
             // find out if we are completing a property in the 'dependencies' object.
             var textUntilPosition = model.getValueInRange({startLineNumber: 1, startColumn: 1, endLineNumber: position.lineNumber, endColumn: position.column});
             var match = textUntilPosition.match(/"dependencies"\s*:\s*\{\s*("[^"]*"\s*:\s*"[^"]*"\s*,\s*)*([^"]*)?$/);
-            if (!match) {
-                //return { suggestions: [] };
-            }
-            console.log('REGISTERING COMPLETIONS');
+            var filtered = Object.entries(snippets).filter(([key, val]) => textUntilPosition.endsWith(key) || textUntilPosition.endsWith(val.prefix));
+            filtered = Object.entries(snippets);
+            console.log('REGISTERING COMPLETIONS', filtered, textUntilPosition);
             var word = model.getWordUntilPosition(position);
             var range = {
                 startLineNumber: position.lineNumber,
@@ -73,7 +72,24 @@ export default async function ({
                 startColumn: word.startColumn,
                 endColumn: word.endColumn
             };
-            return {suggestions: Object.values(snippets).filter(i => i.body?.[0]).map(i => ({kind: monaco.languages.CompletionItemKind.Function, label: i.prefix, documentation: i.description, insertText: i.body[0], range, insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet}))}
+            
+            const suggestions = filtered
+                          .filter(([_, i]) => i.body?.[0])
+                          .map(([key, i]) => ({
+                            kind: monaco.languages.CompletionItemKind.Snippet,
+                            label: `${key} (${i.prefix})`,
+                            documentation: i.description,
+                            insertText: Array.isArray(i.body) ? [...i.body].join("\n") : i.body,
+                            filterText: i.prefix,
+                            range,
+                            insertTextRules: 4 | 1,
+                            preselect: textUntilPosition.endsWith(i.prefix),
+                          }))
+            
+            console.log({suggestions});
+            return {
+              suggestions,
+            }
         }
     });
     
