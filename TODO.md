@@ -1,0 +1,17 @@
+# Todo - Stuff to do
+- [ ] Move icons up a bit on hover for icon picker
+- [ ] Load script into current page for CDN url searcher
+- [ ] Display loading animation for code editor while monaco loads
+- [ ] Rename dev tools panel to 'Developed'
+- [ ] Implement stuff from ideas.txt
+- [ ] Add fetch tester
+- [ ] JSON viewer/minifier (monaco?)
+- [ ] Possibly make monaco more unified if using in JSON viewer as well, e.g. one script that does all that stuff
+- [ ] Try-catch and show errors in code editor
+- [ ] Show result of running stuff in code editor
+- [ ] Capture console logs in code editor?
+- [ ] Highlighting text in code editor causes the texts' spacing do get smaller (?)
+- [ ] Add regex tester and regex search (maybe from https://ihateregex.io/)
+- [ ] Add color shades in color picker for easy copying
+- [ ] Neumorphism + glassmorphism + smooth box-shadows generator
+- [ ] Hide existing code snippets from previous search when searching for new term in the stackoverflow search addon
